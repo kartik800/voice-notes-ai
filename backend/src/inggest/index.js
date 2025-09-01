@@ -4,7 +4,8 @@ import Note from "../../models/Note.js";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Create a client to send and receive events
-export const inngest = new Inngest({ id: "voice-notes-ai" });
+export const inngest = new Inngest({ id: "voice-notes-ai",
+                                   eventKey: process.env.INNGEST_EVENT_KEY,});
 
 // Gemini client
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
