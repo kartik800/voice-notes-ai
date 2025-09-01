@@ -39,5 +39,6 @@ const connectDB = async () => {
 };
 app.use(async (req, res, next) => { await connectDB(); next(); });
 
-// Export serverless handler for Vercel
-export const handler = serverless(app);
+const handler = serverless(app);
+
+export default handler;
