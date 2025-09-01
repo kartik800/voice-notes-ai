@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
 import cors from "cors";
-app.use(cors());
 import connectToMongoDB from "./db/db.js";
 import { serve } from "inngest/express";
 import { inngest, functions } from "./src/inggest/index.js";
@@ -10,6 +9,12 @@ import notesRouter from "./routes/notes.js";
 
 const app = express();
 
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: false,
+  })
+);
 app.use(express.json());
 app.use("/uploads", express.static("uploads")); // serve audio files
 
