@@ -86,6 +86,7 @@ router.get("/:id", async (req, res) => {
 router.get("/debug/env", (req, res) => {
   res.json({
     geminiKey: process.env.GEMINI_API_KEY ? "Loaded" : "Missing",
+    MONGO_URI: process.env.MONGO_URI ? "Loaded": "Missing",
     nodeEnv: process.env.NODE_ENV,
   });
 });
