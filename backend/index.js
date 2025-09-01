@@ -12,7 +12,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://voice-notes-pvxwl99og-kartik800s-projects.vercel.app/",
+    origin: "https://voice-notes-pvxwl99og-kartik800s-projects.vercel.app",
     credentials: true,
   })
 );
