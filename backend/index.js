@@ -11,7 +11,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://voice-notes-pvxwl99og-kartik800s-projects.vercel.app/",
     credentials: true,
   })
 );
