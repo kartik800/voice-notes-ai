@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://voice-notes-ai-6x8g.vercel.app/api/", // backend server
+  baseURL: "http://localhost:5000/api/", // backend server
    withCredentials: true,
 });
 
