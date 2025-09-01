@@ -2,28 +2,13 @@ import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
 import cors from "cors";
+app.use(cors());
 import connectToMongoDB from "./db/db.js";
 import { serve } from "inngest/express";
 import { inngest, functions } from "./src/inggest/index.js";
 import notesRouter from "./routes/notes.js";
 
 const app = express();
-
-const allowedOrigins = [
-  "https://voice-notes-ai-lac.vercel.app",  // frontend deployed
-];
-
-app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin) return callback(null, true); // allow requests like Postman/server-to-server
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("CORS not allowed by server"));
-    }
-  },
-  credentials: true
-}));
 
 app.use(express.json());
 app.use("/uploads", express.static("uploads")); // serve audio files
