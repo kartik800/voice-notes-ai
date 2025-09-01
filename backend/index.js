@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: "https://voice-notes-pvxwl99og-kartik800s-projects.vercel.app",
+    origin: "https://voice-notes-ai-lac.vercel.app",
     credentials: true,
   })
 );
