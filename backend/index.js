@@ -9,12 +9,21 @@ import notesRouter from "./routes/notes.js";
 
 const app = express();
 
-app.use(
-  cors({
-    origin: "https://voice-notes-ai-lac.vercel.app",
-    credentials: false,
-  })
-);
+const allowedOrigins = [
+  "http://localhost:3000",                  // local dev
+  "https://voice-notes-ai-lac.vercel.app", // deployed frontend
+];
+
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    callback(new Error("CORS not allowed"));
+  },
+  credentials: true, // allow cookies/auth
+}));
+
 app.use(express.json());
 app.use("/uploads", express.static("uploads")); // serve audio files
 
@@ -22,15 +31,21 @@ app.use("/api/notes", notesRouter);
 
 app.use("/api/inngest", serve({ client: inngest, functions }));
 
-const startServer = async () => {
-  try {
-    await connectToMongoDB();
-    app.listen(5000, () => {
-      console.log(" Server running on http://localhost:5000");
-    });
-  } catch (err) {
-    console.error("Failed to start server:", err);
+let cachedDB = null;
+
+const connectDB = async () => {
+  if (!cachedDB) {
+    cachedDB = await connectToMongoDB();
+    console.log("MongoDB connected");
   }
+  return cachedDB;
 };
 
-startServer();
+// Wrap all requests to ensure DB is connected
+app.use(async (req, res, next) => {
+  await connectDB();
+  next();
+});
+
+// ------------------ Export serverless handler ------------------
+export const handler = serverless(app);
