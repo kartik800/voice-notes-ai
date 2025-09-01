@@ -82,4 +82,13 @@ router.get("/:id", async (req, res) => {
   res.json(note);
 });
 
+// temporary
+router.get("/debug/env", (req, res) => {
+  res.json({
+    geminiKey: process.env.GEMINI_API_KEY ? "Loaded" : "Missing",
+    nodeEnv: process.env.NODE_ENV,
+  });
+});
+
+
 export default router;
