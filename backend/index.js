@@ -23,16 +23,16 @@ app.use("/api/notes", notesRouter);
 
 app.use("/api/inngest", serve({ client: inngest, functions }));
 
-connectToMongoDB();
-// const startServer = async () => {
-//   try {
-//     await connectToMongoDB();
-//     // app.listen(PORT, () => {
-//     //   console.log(" Server running on http://localhost:5000");
-//     // });
-//   } catch (err) {
-//     console.error("Failed to start server:", err);
-//   }
-// };
+// connectToMongoDB();
+const startServer = async () => {
+  try {
+    await connectToMongoDB();
+    app.listen(PORT, () => {
+      console.log(" Server running on http://localhost:5000");
+    });
+  } catch (err) {
+    console.error("Failed to start server:", err);
+  }
+};
 
-// startServer();
+startServer();
