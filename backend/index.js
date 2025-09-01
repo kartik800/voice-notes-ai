@@ -1,12 +1,12 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import connectToMongoDB from "./db/db.js";
 import { serve } from "inngest/express";
 import { inngest, functions } from "./src/inggest/index.js";
 import notesRouter from "./routes/notes.js";
 
-dotenv.config();
 const app = express();
 
 app.use(

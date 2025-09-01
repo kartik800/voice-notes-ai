@@ -1,10 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import api from "../api";
 
 export default function NoteCard({ note, onUpdate, onDelete }) {
   const [text, setText] = useState(note.transcript);
+
   const [editing, setEditing] = useState(false);
   const [loadingSummary, setLoadingSummary] = useState(false);
+
+  useEffect(() => {
+    setText(note.transcript);
+  }, [note.transcript]);
+  console.log("text is: ", text);
 
   async function handleSave() {
     const { data } = await api.put(`/notes/${note._id}`, { transcript: text });
@@ -18,10 +24,26 @@ export default function NoteCard({ note, onUpdate, onDelete }) {
   }
 
   async function handleSummarize() {
-    setLoadingSummary(true);
-    const { data } = await api.post(`/notes/${note._id}/summarize`);
-    onUpdate(data);
-    setLoadingSummary(false);
+    try {
+      setLoadingSummary(true);
+      await api.post(`/notes/${note._id}/summarize`);
+      // poll for summary update
+      pollSummary(note._id);
+    } catch (err) {
+      console.error(err);
+      setLoadingSummary(false);
+    }
+  }
+
+  async function pollSummary(noteId) {
+    const interval = setInterval(async () => {
+      const { data } = await api.get(`/notes/${noteId}`);
+      if (data.summary && data.summary.trim() !== "") {
+        onUpdate(data); // update in parent state
+        clearInterval(interval);
+        setLoadingSummary(false);
+      }
+    }, 3000);
   }
 
   return (
@@ -33,7 +55,11 @@ export default function NoteCard({ note, onUpdate, onDelete }) {
           onChange={(e) => setText(e.target.value)}
         />
       ) : (
-        <p className="text-gray-800">{note.transcript || " Transcribing..."}</p>
+        <p className="text-gray-800">
+          {note.transcript && note.transcript.trim().length > 0
+            ? note.transcript
+            : "Transcribing..."}
+        </p>
       )}
 
       {note.summary && (

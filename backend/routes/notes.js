@@ -41,7 +41,7 @@ router.post("/", upload.single("audio"), async (req, res) => {
 });
 
 // Trigger summary generation
-router.post("/:id/summary", async (req, res) => {
+router.post("/:id/summarize", async (req, res) => {
   try {
     const note = await Note.findById(req.params.id);
     if (!note) return res.status(404).json({ error: "Note not found" });
@@ -74,6 +74,12 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   await Note.findByIdAndDelete(req.params.id);
   res.json({ success: true });
+});
+
+router.get("/:id", async (req, res) => {
+  const note = await Note.findById(req.params.id);
+  if (!note) return res.status(404).json({ error: "Not found" });
+  res.json(note);
 });
 
 export default router;

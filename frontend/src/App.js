@@ -11,12 +11,23 @@ function App() {
     setNotes(data);
   }
 
+  async function pollTranscript(noteId) {
+    const interval = setInterval(async () => {
+      const { data } = await api.get(`/notes/${noteId}`);
+      if (data.transcript && data.transcript.trim() !== "") {
+        setNotes((prev) => prev.map((n) => (n._id === noteId ? data : n)));
+        clearInterval(interval);
+      }
+    }, 3000); // every 3s
+  }
+
   useEffect(() => {
     fetchNotes();
   }, []);
 
   function handleUploaded(note) {
     setNotes((prev) => [note, ...prev]);
+    pollTranscript(note._id);
   }
 
   function handleUpdate(updated) {
