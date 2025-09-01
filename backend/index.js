@@ -5,6 +5,7 @@ import cors from "cors";
 import connectToMongoDB from "./db/db.js";
 import { serve } from "inngest/express";
 import { inngest, functions } from "./src/inggest/index.js";
+import serverless from "serverless-http"; 
 import notesRouter from "./routes/notes.js";
 
 const app = express();
@@ -32,20 +33,11 @@ app.use("/api/notes", notesRouter);
 app.use("/api/inngest", serve({ client: inngest, functions }));
 
 let cachedDB = null;
-
 const connectDB = async () => {
-  if (!cachedDB) {
-    cachedDB = await connectToMongoDB();
-    console.log("MongoDB connected");
-  }
+  if (!cachedDB) cachedDB = await connectToMongoDB();
   return cachedDB;
 };
+app.use(async (req, res, next) => { await connectDB(); next(); });
 
-// Wrap all requests to ensure DB is connected
-app.use(async (req, res, next) => {
-  await connectDB();
-  next();
-});
-
-// ------------------ Export serverless handler ------------------
+// Export serverless handler for Vercel
 export const handler = serverless(app);
