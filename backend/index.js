@@ -27,9 +27,9 @@ app.use("/api/inngest", serve({ client: inngest, functions }));
 const startServer = async () => {
   try {
     await connectToMongoDB();
-    app.listen(5000, () => {
-      console.log(" Server running on http://localhost:5000");
-    });
+    // app.listen(5000, () => {
+    //   console.log(" Server running on http://localhost:5000");
+    // });
   } catch (err) {
     console.error("Failed to start server:", err);
   }
