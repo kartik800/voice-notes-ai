@@ -24,7 +24,9 @@ export default function Recorder({ onUploaded }) {
 
         console.log("part-2");
         console.log([...formData.entries()]);
-        const { data } = await api.post("/notes", formData);
+       const { data } = await api.post("/notes", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
 
         console.log("data is: ", data);
 
