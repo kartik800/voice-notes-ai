@@ -11,7 +11,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://voice-notes-ai-lac.vercel.app'",
+    origin: "https://voice-notes-ai-lac.vercel.app",
     credentials: false,
   })
 );
