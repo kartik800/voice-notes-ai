@@ -9,12 +9,24 @@ import notesRouter from "./routes/notes.js";
 
 const app = express();
 
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  })
-);
+const allowedOrigins = [
+  "http://localhost:3000",                   // local dev
+  "https://voice-notes-ai-lac.vercel.app",  // frontend deployed
+  "https://voice-notes-ai-6x8g.vercel.app"  // optional another frontend
+];
+
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true); // allow requests like Postman/server-to-server
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS not allowed by server"));
+    }
+  },
+  credentials: true
+}));
+
 app.use(express.json());
 app.use("/uploads", express.static("uploads")); // serve audio files
 
